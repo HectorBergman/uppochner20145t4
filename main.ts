@@ -35,6 +35,9 @@ radio.onReceivedValue(function (name, value) {
         position(value, yPosition)
     } else if (name == "yPos") {
         position(xPosition, value)
+    } else if (name == "interact" && value == 4) {
+        basic.showNumber(3)
+        Solved = 1
     } else {
     	
     }
@@ -46,8 +49,10 @@ function cubeGravityUp (num: number) {
         cubeY += -1
     }
 }
-let otherway = 0
+let bro_stop = 0
 let compassheading = 0
+let otherway = 0
+let Solved = 0
 let cubeX = 0
 let cubeY = 0
 let yPosition = 0
@@ -65,52 +70,69 @@ cubeX = 1
 radio.sendValue("cubeX", cubeX)
 radio.sendValue("cubeY", cubeY)
 basic.forever(function () {
-    compassheading = input.compassHeading()
-})
-basic.forever(function () {
-    if (otherway == 0) {
-        if (Conestart < Coneend) {
-            if (compassheading > Conestart && compassheading < Coneend) {
-                cubeGravityUp(4)
-                otherway = 1
+    if (cubeX != 4 && cubeY != 0) {
+        if (otherway == 0) {
+            if (Conestart < Coneend) {
+                if (compassheading > Conestart && compassheading < Coneend) {
+                    cubeGravityUp(4)
+                    otherway = 1
+                } else {
+                	
+                }
             } else {
-            	
+                if (compassheading > Conestart || compassheading < Coneend) {
+                    cubeGravityUp(4)
+                    otherway = 1
+                } else {
+                	
+                }
             }
         } else {
-            if (compassheading > Conestart || compassheading < Coneend) {
-                cubeGravityUp(4)
-                otherway = 1
+            if (Conestart2 < Coneend2) {
+                if (compassheading > Conestart2 && compassheading < Coneend2) {
+                    cubeGravityDown(4)
+                    otherway = 0
+                } else {
+                	
+                }
             } else {
-            	
+                if (compassheading > Conestart2 || compassheading < Coneend2) {
+                    cubeGravityDown(4)
+                    otherway = 0
+                } else {
+                	
+                }
             }
         }
     } else {
-        if (Conestart2 < Coneend2) {
-            if (compassheading > Conestart2 && compassheading < Coneend2) {
-                cubeGravityDown(4)
-                otherway = 0
-            } else {
-            	
-            }
-        } else {
-            if (compassheading > Conestart2 || compassheading < Coneend2) {
-                cubeGravityDown(4)
-                otherway = 0
-            } else {
-            	
-            }
+        if (bro_stop == 0) {
+            radio.sendValue("xTarget", 9)
+            radio.sendValue("yTarget", 5)
+            radio.sendValue("cubeX", -1)
+            radio.sendValue("cubeY", -1)
+            bro_stop = 1
         }
     }
 })
 basic.forever(function () {
-    led.plot(xPosition - 5, yPosition - 5)
+    if (Solved == 1 && (xPosition < 5 || yPosition < 5)) {
+        basic.showNumber(3)
+    }
 })
 basic.forever(function () {
-    led.plot(4, 0)
-    basic.pause(700)
-    led.unplot(4, 0)
-    basic.pause(1400)
-    led.plot(4, 0)
+    if (cubeX != 4 && cubeY != 0) {
+        led.plot(4, 0)
+        basic.pause(700)
+        led.unplot(4, 0)
+        basic.pause(1400)
+        led.plot(4, 0)
+    }
+})
+basic.forever(function () {
+    compassheading = input.compassHeading()
+})
+basic.forever(function () {
+    led.plot(xPosition - 5, yPosition - 5)
 })
 basic.forever(function () {
     led.plot(cubeX, cubeY)
